@@ -1,4 +1,4 @@
-from re import split
+from re import S, match, split
 import telebot
 from telebot.types import Message
 import time
@@ -11,9 +11,36 @@ def getWeather(city):
     city.title()
     res = requests.get("http://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=0efdd3ecd2a008f997522da842192aa0")
     data = res.json()
-    a = data['weather'][0]['description'] 
-    b =  data['main']['temp'] - 273
-    www = "Weater is "+str(a)+"\nTemperatre: "+str(int(b))+"°C"
+    w = data['weather'][0]['description'] 
+    if w == 'clear sky':
+       w = "Небо безхмарне"
+    elif w == "overcast clouds":
+      w = "Похмуро"
+    elif w == "mist":
+      w = "Туман"
+    elif w == "fog":
+      w = "Туман"
+    elif w == "scattered clouds":
+      w = "Розсіяні хмари"
+    elif w == "broken clouds":
+      w = "Рвані хмари"
+    elif w == "few clouds":
+      w = "Дрібні хмари"
+    elif w == "light snow":
+      w = "Легкий сніг"
+    elif w == "light rain":
+      w = "Легкий дощ"
+    elif w == "moderate rain":
+      w = "Помірний дощ"
+    elif w == "rain":
+      w = "Дощ"
+    h = data['main']['humidity'] 
+    t =  data['main']['temp'] - 273
+    f_t =  data['main']['feels_like'] - 273
+    p =  data['main']['pressure'] 
+    wind =  data['wind']['speed'] 
+
+    www =str(w)+"\nТемпература "+str(int(t))+"°C \nВідчувається як "+str(int(t))+"°C \nВологість: "+str(h)+"%\nТиск: "+str(p)+"\nШвилкість вітру "+str(wind)+"м/с"
     return www
   except Exception as e:
     return("Населений пункт вказано невірно"+ u'😢', e)
